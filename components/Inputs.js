@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Router } from 'next/router';
+import Router from 'next/router';
 
 class Inputs extends Component {
   constructor(props) {
@@ -16,8 +16,11 @@ class Inputs extends Component {
     const schools = await this.getSchools(this.props.state);
     this.setState(schools);
     console.log(this.state);
+    console.log(sessionStorage);
     sessionStorage.setItem('schools', this.state);
-    Router.push({ pathname: '/info' });
+    Router.push({
+      pathname: '/info',
+    });
   };
 
   getSchools = async state => {
