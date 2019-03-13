@@ -1,6 +1,5 @@
 import Inputs from '../components/Inputs';
 import React from 'react';
-
 class Index extends React.Component {
   constructor(props) {
     super(props);
@@ -15,11 +14,6 @@ class Index extends React.Component {
 
   checkBox = currentTarget => {
     this.setState({ [currentTarget.name]: currentTarget.checked });
-  };
-
-  submit = () => {
-    // make the request
-    // nav to the info page, where all of the schools will be rendered
   };
 
   render() {
