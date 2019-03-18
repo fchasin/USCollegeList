@@ -8,16 +8,23 @@ class Inputs extends Component {
   }
 
   handleCheck = e => {
-    this.props.checkBox(e.currentTarget);
+    this.props.checkBox(e.target);
+  };
+
+  onChange = e => {
+    const { name, type, value } = e.target;
+    const val = type === 'number' ? parseFloat(value) : value;
+    this.setState({ [name]: val });
   };
 
   onSubmit = async e => {
     e.preventDefault();
+
     const schools = await this.getSchools(this.props.state);
     this.setState(schools);
     console.log(this.state);
     console.log(sessionStorage);
-    sessionStorage.setItem('schools', this.state);
+    sessionStorage.setItem('schools', JSON.stringify(this.state));
     Router.push({
       pathname: '/info',
     });
@@ -30,7 +37,7 @@ class Inputs extends Component {
       return;
     }
 
-    let city, size, cost, income;
+    let city, size, cost, income, range;
 
     // assign variables based on input
     if (state.city) {
@@ -49,9 +56,12 @@ class Inputs extends Component {
       income = '2015.student.demographics.median_family_income,';
     } else income = '';
 
+    if (state.range) {
+      range = state.range;
+    } else range = 25000;
     // test if there's a correct response back from db for the first page
     const response = await fetch(
-      `https://api.data.gov/ed/collegescorecard/v1/schools?2015.student.size__range=1000..&_fields=id,school.name,${city}2015.student.enrollment.all,${cost}school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
+      `https://api.data.gov/ed/collegescorecard/v1/schools?2015.student.size__range=${range}..&_fields=id,school.name,${city}2015.student.enrollment.all,${cost}school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
     );
     const schools = await response.json();
     const pageSize = 20;
@@ -62,7 +72,7 @@ class Inputs extends Component {
       for (let i = 0; i < schools.metadata.total / pageSize; i++) {
         const response = await fetch(
           `https://api.data.gov/ed/collegescorecard/v1/schools?_page=${i +
-            1}&2015.student.size__range=1000..&_fields=id,school.name,school.city,2015.student.size,2015.student.enrollment.all,2015.cost.attendance.academic_year,school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
+            1}&2015.student.size__range=${range}..&_fields=id,school.name,school.city,2015.student.size,2015.student.enrollment.all,2015.cost.attendance.academic_year,school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
         );
         const { results: newResults } = await response.json();
         schools.results.push(...newResults);
@@ -119,7 +129,13 @@ class Inputs extends Component {
         <div>
           <label>
             Schools Greater than:
-            <input type="text" name="size" id="size" required />
+            <input
+              type="text"
+              name="range"
+              id="range"
+              required
+              onChange={this.onChange}
+            />
           </label>
         </div>
         <button type="submit">Submit</button>
