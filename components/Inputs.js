@@ -19,7 +19,6 @@ class Inputs extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-
     const schools = await this.getSchools(this.props.state);
     this.setState(schools);
     console.log(this.state);
@@ -30,6 +29,7 @@ class Inputs extends Component {
     });
   };
 
+  // backend side
   getSchools = async state => {
     const cachedHits = sessionStorage.getItem(this.state);
     if (cachedHits) {
