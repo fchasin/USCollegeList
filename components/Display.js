@@ -7,6 +7,10 @@ class Display extends Component {
     this.state = { schools: [] };
   }
 
+  componentWillUnmount() {
+    sessionStorage.clear();
+  }
+
   render() {
     return (
       <div>
@@ -18,7 +22,7 @@ class Display extends Component {
             console.log(schools.range);
             console.log(schools);
             let lessSchools = [];
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < schools.results.length; i++) {
               lessSchools.push(schools.results[i]);
             }
             this.setState({ schools: lessSchools });

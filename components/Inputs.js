@@ -12,9 +12,7 @@ class Inputs extends Component {
   };
 
   onChange = e => {
-    const { name, type, value } = e.target;
-    const val = type === 'number' ? parseFloat(value) : value;
-    this.setState({ [name]: val });
+    this.props.onChange(e.target);
   };
 
   onSubmit = async e => {
@@ -31,35 +29,37 @@ class Inputs extends Component {
 
   // backend side
   getSchools = async state => {
-    const cachedHits = sessionStorage.getItem(this.state);
-    if (cachedHits) {
-      this.setState({ hits: JSON.parse(cachedHits) });
-      return;
-    }
+    sessionStorage.clear();
 
-    let city, size, cost, income, range;
+    // const cachedHits = sessionStorage.getItem(this.state);
+    // if (cachedHits) {
+    //   this.setState({ hits: JSON.parse(cachedHits) });
+    //   return;
+    // }
+
+    let city, size, cost, income;
 
     // assign variables based on input
-    if (state.city) {
+    if (this.props.state.city) {
       city = 'school.city,';
     } else city = '';
 
-    if (state.size) {
+    if (this.props.state.size) {
       size = '2015.student.size,';
     } else size = '';
 
-    if (state.cost) {
+    if (this.props.state.cost) {
       cost = '2015.cost.attendance.academic_year,';
     } else cost = '';
 
-    if (state.income) {
+    if (this.props.state.income) {
       income = '2015.student.demographics.median_family_income,';
     } else income = '';
 
-    if (state.range) {
-      range = state.range;
-    } else range = 25000;
+    let range = this.props.state.range;
+
     // test if there's a correct response back from db for the first page
+    // how we find the metadata from the response
     const response = await fetch(
       `https://api.data.gov/ed/collegescorecard/v1/schools?2015.student.size__range=${range}..&_fields=id,school.name,${city}2015.student.enrollment.all,${cost}school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
     );
@@ -78,7 +78,11 @@ class Inputs extends Component {
         schools.results.push(...newResults);
       }
     } else {
-      throw Error('unable to fetch puzzle');
+      throw Error(
+        `Something happened with the request. The status of the HTTP request is ${
+          response.status
+        }`
+      );
     }
     // set the state, then set the local session storage with the data
     return schools;

@@ -8,7 +8,7 @@ class Index extends React.Component {
       zip: false,
       income: false,
       cost: false,
-      size: 0,
+      range: 0,
     };
   }
 
@@ -16,10 +16,20 @@ class Index extends React.Component {
     this.setState({ [currentTarget.name]: currentTarget.checked });
   };
 
+  onChange = currentTarget => {
+    const { name, type, value } = currentTarget;
+    const val = type === 'number' ? parseFloat(value) : value;
+    this.setState({ [name]: val });
+  };
+
   render() {
     return (
       <div>
-        <Inputs checkBox={this.checkBox} state={this.state} />
+        <Inputs
+          checkBox={this.checkBox}
+          state={this.state}
+          onChange={this.onChange}
+        />
       </div>
     );
   }
