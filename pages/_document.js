@@ -52,10 +52,11 @@ class MyDocument extends Document {
               bottom: 0;
               overflow: scroll;
               scroll-behavior: smooth;
-              font-family: 'Lato', sans-serif;            }
+              font-family: 'Lato', sans-serif;            
+            }
             a {
               text-decoration: none;
-              font-family: 'Lato', sans-serif;
+              font-family: 'Lato', sans-serif; 
             }`}
           </style>
         </Head>
