@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import Router from 'next/router';
 
 class Inputs extends Component {
   constructor(props) {

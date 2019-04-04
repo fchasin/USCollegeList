@@ -22,7 +22,7 @@ class Index extends React.Component {
                 type="checkbox"
                 name="city"
                 id="city"
-                onChange={this.handleCheck}
+                onChange={this.checkBox}
               />
             </label>
             <label>
@@ -31,7 +31,7 @@ class Index extends React.Component {
                 type="checkbox"
                 name="zip"
                 id="zip"
-                onChange={this.handleCheck}
+                onChange={this.checkBox}
               />
             </label>
             <label>
@@ -40,7 +40,7 @@ class Index extends React.Component {
                 type="checkbox"
                 name="income"
                 id="income"
-                onChange={this.handleCheck}
+                onChange={this.checkBox}
               />
             </label>
             <label>
@@ -49,7 +49,7 @@ class Index extends React.Component {
                 type="checkbox"
                 name="cost"
                 id="cost"
-                onChange={this.handleCheck}
+                onChange={this.checkBox}
               />
             </label>
           </div>
@@ -74,14 +74,20 @@ class Index extends React.Component {
   onSubmit = async e => {
     e.preventDefault();
     this.setState({ value: <div>This is loading! </div> });
-    console.log(this.state);
     const schools = await this.getSchools(this.props.state);
     this.setState(schools);
     console.log(sessionStorage);
+
     // assign school data to sessionstorage.
-    sessionStorage.setItem('scho  ols', JSON.stringify(this.state));
+    sessionStorage.setItem('schools', JSON.stringify(this.state));
     Router.push({
       pathname: '/info',
+      query: {
+        city: this.state.city,
+        zip: this.state.zip,
+        cost: this.state.cost,
+        income: this.state.income,
+      },
     });
   };
 
@@ -147,14 +153,14 @@ class Index extends React.Component {
   };
 
   checkBox = currentTarget => {
-    this.setState({ [currentTarget.name]: currentTarget.checked });
+    const { checked, name } = currentTarget.currentTarget;
+    this.setState({ [name]: checked });
     console.log(this.state);
   };
 
   onChange = currentTarget => {
-    const { name, type, value } = currentTarget;
-    const val = type === 'number' ? parseFloat(value) : value;
-    this.setState({ [name]: val });
+    const { value } = currentTarget.currentTarget;
+    this.setState({ range: parseFloat(value) });
   };
 
   render() {
