@@ -94,13 +94,6 @@ class Index extends React.Component {
   // backend side
   getSchools = async state => {
     sessionStorage.clear();
-
-    // const cachedHits = sessionStorage.getItem(this.state);
-    // if (cachedHits) {
-    //   this.setState({ hits: JSON.parse(cachedHits) });
-    //   return;
-    // }
-
     let city, size, cost, income;
 
     // assign variables based on input
