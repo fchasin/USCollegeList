@@ -10,8 +10,11 @@ export default () => {
 
       <style jsx>{`
         .landing {
-          background: url(https://unsplash.com/photos/vEgVWRBr2VY);
-          min-height: 100%;
+          position: absolute;
+          background-image: url('https://unsplash.com/photos/vEgVWRBr2VY')
+            no-repeat;
+          width: 100%;
+          height: 100%;
         }
       `}</style>
     </div>
