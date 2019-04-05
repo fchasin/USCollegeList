@@ -4,7 +4,7 @@ import School from '../components/School';
 class Display extends Component {
   constructor(props) {
     super(props);
-    this.state = { schools: [] };
+    this.state = { schools: [], search: '' };
   }
 
   componentWillUnmount() {
@@ -13,7 +13,8 @@ class Display extends Component {
 
   onChange = currentTarget => {
     const { value } = currentTarget.currentTarget;
-    this.setState({ search: parseFloat(value) });
+    this.setState({ search: value });
+    console.log(this.state.search);
   };
 
   render() {
@@ -34,20 +35,20 @@ class Display extends Component {
             this.setState({ schools: lessSchools });
           }}
         />
-        {if () {
-          this.state.schools.map(school => {
+        {this.state.schools.map(school => {
           if (this.state.search) {
-            if (school['school.name'].includes(this.state.search)) {
+            if (
+              school['school.name']
+                .toLowerCase()
+                .includes(this.state.search.toLowerCase())
+            ) {
               return <School school={school} />;
             }
           } else return <School school={school} />;
         })}
-        }
       </div>
     );
   }
 }
 
 export default Display;
-
-//  This is the new render function

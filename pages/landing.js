@@ -76,7 +76,6 @@ class Index extends React.Component {
     this.setState({ value: <div>This is loading! </div> });
     const schools = await this.getSchools(this.props.state);
     this.setState(schools);
-    console.log(sessionStorage);
 
     // assign school data to sessionstorage.
     sessionStorage.setItem('schools', JSON.stringify(this.state));
@@ -148,7 +147,6 @@ class Index extends React.Component {
   checkBox = currentTarget => {
     const { checked, name } = currentTarget.currentTarget;
     this.setState({ [name]: checked });
-    console.log(this.state);
   };
 
   onChange = currentTarget => {
