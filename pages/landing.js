@@ -73,7 +73,15 @@ class Index extends React.Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    this.setState({ value: <div>This is loading! </div> });
+    this.setState({
+      value: (
+        <div>
+          We're loading your results! Depending on how many schools you
+          selected, this could take anywhere from a few seconds to 2 minutes.
+          Please don't refresh the page.
+        </div>
+      ),
+    });
     const schools = await this.getSchools(this.props.state);
     this.setState(schools);
 
@@ -111,6 +119,10 @@ class Index extends React.Component {
     if (this.state.income) {
       income = '2015.student.demographics.median_family_income,';
     } else income = '';
+
+    if (this.state.size) {
+      size = '2015.student.size';
+    } else size = '';
 
     let range = this.state.range;
 
