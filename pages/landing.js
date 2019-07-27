@@ -72,6 +72,7 @@ class Index extends React.Component {
   }
 
   onSubmit = async e => {
+    sessionStorage.clear();
     e.preventDefault();
     this.setState({
       value: (
@@ -100,7 +101,6 @@ class Index extends React.Component {
 
   // backend side
   getSchools = async state => {
-    sessionStorage.clear();
     let city, size, cost, income;
 
     // assign variables based on input

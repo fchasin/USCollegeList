@@ -7,6 +7,17 @@ class Display extends Component {
     this.state = { schools: [], search: '' };
   }
 
+  componentDidMount() {
+    let schools = sessionStorage.getItem('schools');
+    let schools1 = JSON.parse(schools);
+
+    console.log(schools);
+    console.log(schools1);
+    this.setState({
+      schools: schools1,
+    });
+  }
+
   componentWillUnmount() {
     sessionStorage.clear();
   }
@@ -25,21 +36,21 @@ class Display extends Component {
         <input type="text" name="name" onChange={this.onChange} />
         <h4>Search by Size: greater than:</h4>
         <input type="text" name="size" onChange={this.onChange} />
+
         {
-          //  button that loads all of the data
+          // <button
+          //           onClick={e => {
+          //             e.preventDefault();
+          //             const schools = JSON.parse(sessionStorage.getItem('schools'));
+          //             console.log(schools);
+          //             for (let i = 0; i < schools.results.length; i++) {
+          //               if (schools.results[i][`2015.student.size`])
+          //                 lessSchools.push(schools.results[i]);
+          //             }
+          //             this.setState({ schools: lessSchools });
+          //           }}
+          //>
         }
-        <button
-          onClick={e => {
-            e.preventDefault();
-            const schools = JSON.parse(sessionStorage.getItem('schools'));
-            let lessSchools = [];
-            for (let i = 0; i < schools.results.length; i++) {
-              if (schools.results[i][`2015.student.size`])
-                lessSchools.push(schools.results[i]);
-            }
-            this.setState({ schools: lessSchools });
-          }}
-        />
         {
           // if there is nthing in the search boxes, render normally
           //!!!! the number sorting is still broken
