@@ -128,32 +128,49 @@ class Index extends React.Component {
 
     // test if there's a correct response back from db for the first page
     // how we find the metadata from the response
-    const response = await fetch(
+    const res = await fetch(
       `https://api.data.gov/ed/collegescorecard/v1/schools?2015.student.size__range=${range}..&_fields=id,school.name,${city}2015.student.enrollment.all,${cost}school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
     );
-    const schools = await response.json();
-    const pageSize = 20;
+    const firstPage = await res.json();
+    // always the same pagesize from metadata
+    const PAGESIZE = 20;
+    const requests = [];
 
     // then request all of the pages
-    // there's probably a better way to do this thru promise.all()
-    if (response.status === 200) {
-      for (let i = 0; i < schools.metadata.total / pageSize; i++) {
-        const response = await fetch(
-          `https://api.data.gov/ed/collegescorecard/v1/schools?_page=${i +
-            1}&2015.student.size__range=${range}..&_fields=id,school.name,school.city,2015.student.size,2015.student.enrollment.all,2015.cost.attendance.academic_year,school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`
-        );
-        const { results: newResults } = await response.json();
-        schools.results.push(...newResults);
+    const getPage = async function(pageNumber) {
+      const url = `https://api.data.gov/ed/collegescorecard/v1/schools?_page=${pageNumber}&2015.student.size__range=${range}..&_fields=id,school.name,school.city,2015.student.size,2015.student.enrollment.all,2015.cost.attendance.academic_year,school.degree_urbanization,school.zip,2015.student.demographics.median_family_income,2015.admissions.sat_scores.average.overall&api_key=aGm3481p0Yd5XxhagTDeIFQOEqQVhvx4p3uqtEyL`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data;
+    };
+
+    if (res.status === 200) {
+      for (let i = 0; i < firstPage.metadata.total / PAGESIZE; i++) {
+        requests.push(getPage(i));
       }
     } else {
       throw Error(
         `Something happened with the request. The status of the HTTP request is ${
-          response.status
+          res.status
         }`
       );
     }
-    // set the state, then set the local session storage with the data
-    return schools;
+
+    const schools = await Promise.all(requests);
+    console.log(schools);
+
+    const flattenedSchools = schools.reduce(
+      (res, next) =>
+        res.concat(
+          next.results.reduce(
+            (schoolsPerPage, eachSchool) => schoolsPerPage.concat(eachSchool),
+            []
+          )
+        ),
+      []
+    );
+
+    return flattenedSchools;
   };
 
   checkBox = currentTarget => {
