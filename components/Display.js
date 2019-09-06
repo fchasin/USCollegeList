@@ -1,6 +1,12 @@
 import { Component } from 'react';
 import School from '../components/School';
 
+function addNames(name, value) {
+  return previousState => {
+    return { ...previousState, [name]: value };
+  };
+}
+
 class Display extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +20,7 @@ class Display extends Component {
     console.log(schools);
     console.log(schools1);
     this.setState({
-      schools: schools1,
+      schools: Object.keys(schools1).map(key => schools1[key]),
     });
   }
 
@@ -23,9 +29,13 @@ class Display extends Component {
   }
 
   onChange = event => {
-    const { value, name } = event.currentTarget;
-    this.setState({ [name]: value });
-    console.log(event.currentTarget);
+    const { name, value } = event.currentTarget;
+    console.log(name, value);
+    // the problem is right here- state isn't correctly being set by the following function
+    // breaks when I type into name but not into size
+    this.setState({ [name]: value }, () => {
+      console.log(state.name);
+    });
   };
 
   render() {
@@ -36,24 +46,10 @@ class Display extends Component {
         <input type="text" name="name" onChange={this.onChange} />
         <h4>Search by Size: greater than:</h4>
         <input type="text" name="size" onChange={this.onChange} />
-
-        {
-          // <button
-          //           onClick={e => {
-          //             e.preventDefault();
-          //             const schools = JSON.parse(sessionStorage.getItem('schools'));
-          //             console.log(schools);
-          //             for (let i = 0; i < schools.results.length; i++) {
-          //               if (schools.results[i][`2015.student.size`])
-          //                 lessSchools.push(schools.results[i]);
-          //             }
-          //             this.setState({ schools: lessSchools });
-          //           }}
-          //>
-        }
         {
           // if there is nthing in the search boxes, render normally
           //!!!! the number sorting is still broken
+          // this looks at state set from onChange event
         }
         {this.state.schools.map(school => {
           if (this.state.name || this.state.size) {
