@@ -34,7 +34,7 @@ class Display extends Component {
     // the problem is right here- state isn't correctly being set by the following function
     // breaks when I type into name but not into size
     this.setState({ [name]: value }, () => {
-      console.log(state.name);
+      console.log(this.state.name);
     });
   };
 
@@ -55,6 +55,7 @@ class Display extends Component {
           if (this.state.name || this.state.size) {
             if (this.state.name && this.state.size) {
               if (
+                school['school.name'] &&
                 school['school.name']
                   .toLowerCase()
                   .includes(this.state.name.toLowerCase()) &&
@@ -64,6 +65,7 @@ class Display extends Component {
               }
             } else if (this.state.name && !this.state.size) {
               if (
+                school['school.name'] &&
                 school['school.name']
                   .toLowerCase()
                   .includes(this.state.name.toLowerCase())
